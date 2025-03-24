@@ -1,0 +1,39 @@
+DEF Segment_6()
+   ;FOLD INI;%{PE}
+      ;FOLD BASISTECH INI
+         GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS == TRUE DO IR_STOPM()
+         INTERRUPT ON 3
+         BAS(#INITMOV, 0)
+      ;ENDFOLD (BASISTECH INI)
+      ;FOLD USER INI
+         ;Make your modifications here
+      ;ENDFOLD (USER INI)
+   ;ENDFOLD (INI)
+   ;FOLD SPTP P1 CONT Vel=100 % PDAT1 Tool[1]:TOOL_DATA[1] Base[2]:BASE_DATA[2] ;%{PE}
+      ;FOLD Parameters ;%{h}
+         ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=P1; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT1; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP; SimId=
+      ;ENDFOLD
+      SPTP XP1 WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FP1), $BASE = SBASE(FP1.BASE_NO), $IPO_MODE = SIPO_MODE(FP1.IPO_FRAME), $LOAD = SLOAD(FP1.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PPDAT1), $APO = SAPO_PTP(PPDAT1), $GEAR_JERK[1] = SGEAR_JERK(PPDAT1), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0) C_Spl
+   ;ENDFOLD
+   ;FOLD SPTP P5 Vel=100 % PDAT3 Tool[1]:TOOL_DATA[1] Base[2]:BASE_DATA[2] ;%{PE}
+      ;FOLD Parameters ;%{h}
+         ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=P5; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=PDAT3; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP; SimId=
+      ;ENDFOLD
+      SPTP XP5 WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FP5), $BASE = SBASE(FP5.BASE_NO), $IPO_MODE = SIPO_MODE(FP5.IPO_FRAME), $LOAD = SLOAD(FP5.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PPDAT3), $APO = SAPO_PTP(PPDAT3), $GEAR_JERK[1] = SGEAR_JERK(PPDAT3), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+   ;ENDFOLD
+   ;FOLD SLIN P2 Vel=0.1 m/s CPDAT1 Tool[1]:TOOL_DATA[1] Base[2]:BASE_DATA[2] ;%{PE}
+      ;FOLD Parameters ;%{h}
+         ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=P2; Kuka.BlendingEnabled=False; Kuka.MoveDataName=CPDAT1; Kuka.VelocityPath=0.1; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SLIN; SimId=
+      ;ENDFOLD
+      SLIN XP2 WITH $VEL = SVEL_CP(0.1, , LCPDAT1), $TOOL = STOOL2(FP2), $BASE = SBASE(FP2.BASE_NO), $IPO_MODE = SIPO_MODE(FP2.IPO_FRAME), $LOAD = SLOAD(FP2.TOOL_NO), $ACC = SACC_CP(LCPDAT1), $ORI_TYPE = SORI_TYP(LCPDAT1), $APO = SAPO(LCPDAT1), $JERK = SJERK(LCPDAT1), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+   ;ENDFOLD
+   $OUT[10] = FALSE
+   WAIT SEC 1.0
+   ;FOLD SLIN P3 Vel=2 m/s CPDAT3 Tool[1]:TOOL_DATA[1] Base[2]:BASE_DATA[2] ;%{PE}
+      ;FOLD Parameters ;%{h}
+         ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=P3; Kuka.BlendingEnabled=False; Kuka.MoveDataName=CPDAT3; Kuka.VelocityPath=2; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SLIN; SimId=
+      ;ENDFOLD
+      SLIN XP3 WITH $VEL = SVEL_CP(2.0, , LCPDAT3), $TOOL = STOOL2(FP3), $BASE = SBASE(FP3.BASE_NO), $IPO_MODE = SIPO_MODE(FP3.IPO_FRAME), $LOAD = SLOAD(FP3.TOOL_NO), $ACC = SACC_CP(LCPDAT3), $ORI_TYPE = SORI_TYP(LCPDAT3), $APO = SAPO(LCPDAT3), $JERK = SJERK(LCPDAT3), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+   ;ENDFOLD
+   WAIT SEC 0.5
+END
