@@ -1,0 +1,93 @@
+DEF MAIN()
+   ;FOLD INI;%{PE}
+      ;FOLD BASISTECH INI
+         GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS == TRUE DO IR_STOPM()
+         INTERRUPT ON 3
+         BAS(#INITMOV, 0)
+      ;ENDFOLD (BASISTECH INI)
+      ;FOLD USER INI
+         DECL BOOL Podaj_Palete
+         DECL INT iSegment
+         DECL INT iWarstwa
+         iWarstwa=1
+         Podaj_Palete=FALSE
+      ;ENDFOLD (USER INI)
+   ;ENDFOLD (INI)
+   LOOP
+      ;FOLD SPTP HOME Vel=100 % DEFAULT Tool[0] Base[0] ;%{PE}
+         ;FOLD Parameters ;%{h}
+            ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=HOME; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=DEFAULT; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP; SimId=
+         ;ENDFOLD
+         SPTP XHOME WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FHOME), $BASE = SBASE(FHOME.BASE_NO), $IPO_MODE = SIPO_MODE(FHOME.IPO_FRAME), $LOAD = SLOAD(FHOME.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PDEFAULT), $APO = SAPO_PTP(PDEFAULT), $GEAR_JERK[1] = SGEAR_JERK(PDEFAULT), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+      ;ENDFOLD
+      SWITCH iKrok
+         CASE 1 ;Podstawienie podkladki
+            IF Podaj_Palete == FALSE THEN
+               PULSE($OUT[2], TRUE, 0.5)
+               Podaj_Palete=TRUE
+            ELSE
+            ENDIF
+            Przenosnik_Rolkowy()
+            Podkladka()
+         CASE 2
+            FOR iSegment = 1 TO 6
+               REPEAT
+               UNTIL $IN[2]
+               SWITCH iSegment
+                  CASE 1
+                     Podnies()
+                     Segment_1()
+                  CASE 2
+                     Podnies()
+                     Segment_2()
+                  CASE 3
+                     Podnies()
+                     Segment_3()
+                  CASE 4
+                     Podnies()
+                     Segment_4()
+                  CASE 5
+                     Podnies()
+                     Segment_5()
+                  CASE 6
+                     Podnies()
+                     Segment_6()
+                     IF iWarstwa >= 4 THEN
+                        BASE_DATA[2].z=BASE_DATA[2].z - (3*155)
+                        BASE_DATA[3].z=BASE_DATA[3].z + (3*5)
+                        iWarstwa=1
+                        iKrok=3
+                     ELSE
+                        BASE_DATA[2].z=BASE_DATA[2].z +155
+                        BASE_DATA[3].z=BASE_DATA[3].z - 5
+                        iWarstwa=iWarstwa + 1
+                        iKrok=1
+                     ENDIF
+                  DEFAULT
+                     ;insert your statements here
+               ENDSWITCH
+            ENDFOR
+         CASE 3
+            ;FOLD SPTP P1 Vel=100 % PDAT4 Tool[0] Base[0] ;%{PE}
+               ;FOLD Parameters ;%{h}
+                  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=P1; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=PDAT4; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP; SimId=
+               ;ENDFOLD
+               SPTP XP1 WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FP1), $BASE = SBASE(FP1.BASE_NO), $IPO_MODE = SIPO_MODE(FP1.IPO_FRAME), $LOAD = SLOAD(FP1.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PPDAT4), $APO = SAPO_PTP(PPDAT4), $GEAR_JERK[1] = SGEAR_JERK(PPDAT4), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+            ;ENDFOLD
+            Podaj_Palete=FALSE
+            $OUT[1] = TRUE
+            IF NOT $IN[1] THEN
+               iKrok=1
+            ELSE
+            ENDIF
+         DEFAULT
+            
+      ENDSWITCH
+      ;FOLD SPTP HOME Vel=100 % DEFAULT Tool[0] Base[0] ;%{PE}
+         ;FOLD Parameters ;%{h}
+            ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=HOME; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=DEFAULT; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP; SimId=
+         ;ENDFOLD
+         SPTP XHOME WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FHOME), $BASE = SBASE(FHOME.BASE_NO), $IPO_MODE = SIPO_MODE(FHOME.IPO_FRAME), $LOAD = SLOAD(FHOME.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PDEFAULT), $APO = SAPO_PTP(PDEFAULT), $GEAR_JERK[1] = SGEAR_JERK(PDEFAULT), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+      ;ENDFOLD
+   ENDLOOP
+END
